@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import json
-
 from .input_plan import InputPlan
 
 
@@ -28,7 +26,3 @@ def render_plan(plan: InputPlan, remaining: str | None = None) -> str:
     lines.extend(["", "手動チェック:"])
     lines.extend(f"- {step}" for step in plan.manual_steps)
     return "\n".join(lines)
-
-
-def plan_summary_json(plan: InputPlan) -> str:
-    return json.dumps(plan.as_dict(), ensure_ascii=False, indent=2, sort_keys=True)
