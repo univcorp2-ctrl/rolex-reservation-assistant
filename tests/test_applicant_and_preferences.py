@@ -3,6 +3,8 @@ from __future__ import annotations
 import random
 from datetime import datetime
 
+import pytest
+
 from rolex_reservation_assistant.applicant import ApplicantProfile
 from rolex_reservation_assistant.destinations import DESTINATIONS
 from rolex_reservation_assistant.input_plan import build_input_plan, validate_input_plan
@@ -42,7 +44,8 @@ def test_build_input_plan_resolves_near_date_afternoon_and_model() -> None:
     assert plan.preferences.preferred_time_window in DEFAULT_AFTERNOON_SLOTS
     assert plan.preferences.preferred_model in {"レイトナー", "コスモグラフ デイトナ"}
     assert "希望モデル" in [field.label for field in plan.fields]
-    assert "応募文" in next(field.value for field in plan.fields if field.key == "application_text")
+    application_text = next(field.value for field in plan.fields if field.key == "application_text")
+    assert "希望モデル" in application_text
 
 
 def test_required_profile_fields_are_validated() -> None:
@@ -54,9 +57,5 @@ def test_required_profile_fields_are_validated() -> None:
         "email": "taro@example.com",
         "phone": "09000000000",
     }
-    try:
+    with pytest.raises(ValueError, match="birth_date"):
         ApplicantProfile.from_mapping(data)
-    except ValueError as exc:
-        assert "birth_date" in str(exc)
-    else:
-        raise AssertionError("Expected missing birth_date error")
