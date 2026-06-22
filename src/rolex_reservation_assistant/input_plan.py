@@ -75,12 +75,7 @@ def build_input_plan(
         "最終送信ボタンは人間が確認して押す",
         "全店舗を確認する場合は、十分な間隔を空けて次の店舗へ進む",
     ]
-    return InputPlan(
-        destination=destination,
-        preferences=preferences,
-        fields=fields,
-        manual_steps=manual_steps,
-    )
+    return InputPlan(destination=destination, preferences=preferences, fields=fields, manual_steps=manual_steps)
 
 
 def validate_input_plan(plan: InputPlan) -> None:
