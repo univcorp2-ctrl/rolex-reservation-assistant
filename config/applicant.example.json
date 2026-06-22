@@ -1,0 +1,29 @@
+{
+  "family_name": "山田",
+  "given_name": "太郎",
+  "family_name_kana": "ヤマダ",
+  "given_name_kana": "タロウ",
+  "email": "taro.yamada@example.com",
+  "phone": "09000000000",
+  "birth_date": "1980-01-01",
+  "postal_code": "100-0000",
+  "prefecture": "東京都",
+  "city": "千代田区",
+  "address_line1": "丸の内1-1-1",
+  "address_line2": "サンプルビル101",
+  "preferred_date": "auto",
+  "preferred_time_window": "afternoon",
+  "preferred_model": "auto",
+  "preferred_models": [
+    "コスモグラフ デイトナ",
+    "サブマリーナー",
+    "GMTマスターⅡ",
+    "エクスプローラー",
+    "デイトジャスト",
+    "ランドドゥエラー",
+    "レイトナー"
+  ],
+  "visit_purpose": "購入相談",
+  "notes": "予約枠の状況に合わせて来店可能です。",
+  "date_window_days": 10
+}
