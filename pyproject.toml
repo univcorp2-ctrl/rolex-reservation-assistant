@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rolex-reservation-assistant"
+version = "0.1.0"
+description = "Safety-first guided reservation assistant for Rolex boutique reservation pages."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "GitHub-GPT Developer" }]
+dependencies = [
+  "cryptography>=42.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2",
+  "ruff>=0.5.0"
+]
+playwright = [
+  "playwright>=1.45.0"
+]
+
+[project.scripts]
+rolex-reservation-assistant = "rolex_reservation_assistant.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
