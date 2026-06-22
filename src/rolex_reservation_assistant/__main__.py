@@ -5,7 +5,6 @@ import random
 import sys
 import time
 import webbrowser
-from pathlib import Path
 
 from .applicant import ApplicantProfile, load_profile
 from .audit import write_audit_event
@@ -16,7 +15,7 @@ from .destinations import list_destination_keys, resolve_destinations
 from .e2e import SelectorProfile, write_playwright_script
 from .input_plan import build_input_plan
 from .rehearsal import run_rehearsal
-from .render import plan_summary_json, render_plan
+from .render import render_plan
 
 
 def _add_profile_args(parser: argparse.ArgumentParser) -> None:
@@ -101,8 +100,6 @@ def cmd_captcha_cost(args: argparse.Namespace) -> int:
 def cmd_e2e_script(args: argparse.Namespace) -> int:
     profile = _load_profile_from_args(args)
     destinations = resolve_destinations(args.location)
-    if len(destinations) != 1:
-        raise ValueError("e2e-script requires a single location, not all")
     selectors = SelectorProfile.from_file(args.selectors)
     rng = random.Random(args.seed) if args.seed is not None else None
     plan = build_input_plan(profile, destinations[0], rng=rng)
@@ -135,17 +132,6 @@ def cmd_rehearse(args: argparse.Namespace) -> int:
         f"plans_checked={result.plans_checked}, "
         f"scripts_checked={result.scripts_checked}"
     )
-    return 0
-
-
-def cmd_export_plan_json(args: argparse.Namespace) -> int:
-    profile = _load_profile_from_args(args)
-    destinations = resolve_destinations(args.location)
-    rng = random.Random(args.seed) if args.seed is not None else None
-    plans = [build_input_plan(profile, destination, rng=rng).as_dict() for destination in destinations]
-    Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.out).write_text(plan_summary_json(plans[0]) if len(plans) == 1 else str(plans), encoding="utf-8")
-    print(f"Plan JSON written to {args.out}")
     return 0
 
 
@@ -210,7 +196,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         return int(args.func(args))
-    except Exception as exc:  # noqa: BLE001 - CLI should render friendly errors.
+    except Exception as exc:  # CLI should render friendly errors.
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
