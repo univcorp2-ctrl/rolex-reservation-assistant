@@ -1,5 +1,7 @@
 # Rolex Reservation Assistant
 
+![Architecture](docs/architecture.svg)
+
 Rolex boutique reservation pagesの応募準備を支援する、安全第一のPython CLIです。応募文生成、暗号化プロフィール読み込み、ランダムな直近日付・午後枠の選択、入力計画、予約ページ起動、締切確認、CAPTCHA費用見積もり、監査ログ、ローカルE2Eフォーム入力デモ、100回リハーサル検証を1つのリポジトリにまとめています。
 
 このリポジトリには個人情報を載せません。応募者の氏名、メール、電話番号、生年月日などは、ローカルで暗号化したファイル、またはGitHub Actions Secrets / Codespaces Secretsから読み込む設計です。
@@ -30,7 +32,6 @@ Rolex boutique reservation pagesの応募準備を支援する、安全第一の
 - `rehearse --iterations 100` で100回以上の計画生成・検証を行う
 - 実サイトでは手動CAPTCHA・手動送信のチェックリストを表示する
 - 監査ログをJSON Linesで保存する
-- GitHub Actionsでruffとpytestを実行する
 - Codespaces / devcontainerで即起動する
 
 ## 実装しないこと
@@ -169,29 +170,22 @@ python -m rolex_reservation_assistant rehearse \
 
 ## アーキテクチャ概要
 
-READMEと `docs/architecture.md` では、GPT imageの最新モデルで図解資料を作る前提のプロンプトも用意しています。リポジトリ内には画像ファイルそのものではなく、再生成可能なプロンプトとMermaid図を配置しています。
+README冒頭と `docs/architecture.md` にSVG画像版のアーキテクチャ図を埋め込んでいます。GPT image用プロンプトは [`docs/gpt-image-architecture-prompt.md`](docs/gpt-image-architecture-prompt.md) にあります。
 
-```mermaid
-flowchart TD
-    A[local applicant.local.json / GitHub Secret] --> B[encrypt-profile]
-    B --> C[encrypted applicant.enc]
-    C --> D[CLI decrypts with passphrase env]
-    E[store destination registry] --> D
-    D --> F[application text generator]
-    D --> G[input plan builder]
-    D --> H[random near date + afternoon slot]
-    D --> I[deadline and cost estimator]
-    G --> J{target type}
-    J -->|real reservation site| K[open browser + human CAPTCHA/submission checklist]
-    J -->|local E2E mock only| L[generate Playwright fill script]
-    L --> M[mock reservation form]
-    M --> N[mock submission log]
-    D --> O[audit log JSONL]
-    P[rehearse 100+ iterations] --> G
-    Q[GitHub Actions CI] --> R[ruff + pytest + artifact]
-```
+詳細は [`docs/architecture.md`](docs/architecture.md) を参照してください。
 
-詳細は [`docs/architecture.md`](docs/architecture.md) を参照してください。GPT image用プロンプトは [`docs/gpt-image-architecture-prompt.md`](docs/gpt-image-architecture-prompt.md) にあります。
+## CI/CD
+
+GitHub Actions workflowの本来の配置先は `.github/workflows/ci.yml` です。現在のGitHub連携トークンではworkflow作成がGitHub API 404で拒否されたため、同一内容を `docs/ci/python-ci.yml` に保存しています。
+
+workflow内容:
+
+- checkout
+- Python 3.11 / 3.12 setup
+- dependency install
+- ruff lint
+- pytest
+- JUnit artifact upload
 
 ## 本番で必要なもの
 
