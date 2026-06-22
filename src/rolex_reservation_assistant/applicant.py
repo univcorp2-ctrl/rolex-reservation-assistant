@@ -5,6 +5,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from .validation import (
+    normalize_birth_date,
+    normalize_email,
+    normalize_japanese_phone,
+    require_non_empty,
+    validate_profile_shape,
+)
+
 
 @dataclass(frozen=True)
 class ApplicantProfile:
@@ -52,24 +60,13 @@ class ApplicantProfile:
 
     @classmethod
     def from_mapping(cls, data: dict[str, Any]) -> "ApplicantProfile":
-        required = [
-            "family_name",
-            "given_name",
-            "family_name_kana",
-            "given_name_kana",
-            "email",
-            "phone",
-            "birth_date",
-        ]
-        missing = [key for key in required if not data.get(key)]
-        if missing:
-            raise ValueError(f"Missing profile fields: {', '.join(missing)}")
+        validate_profile_shape(data)
 
         preferred_models_raw = data.get("preferred_models", [])
         if isinstance(preferred_models_raw, str):
             preferred_models = (preferred_models_raw,)
         elif isinstance(preferred_models_raw, list):
-            preferred_models = tuple(str(item) for item in preferred_models_raw if str(item).strip())
+            preferred_models = tuple(str(item).strip() for item in preferred_models_raw if str(item).strip())
         else:
             raise ValueError("preferred_models must be a string or list of strings")
 
@@ -78,24 +75,24 @@ class ApplicantProfile:
             raise ValueError("date_window_days must be >= 1")
 
         return cls(
-            family_name=str(data["family_name"]),
-            given_name=str(data["given_name"]),
-            family_name_kana=str(data["family_name_kana"]),
-            given_name_kana=str(data["given_name_kana"]),
-            email=str(data["email"]),
-            phone=str(data["phone"]),
-            birth_date=str(data["birth_date"]),
-            postal_code=str(data.get("postal_code", "")),
-            prefecture=str(data.get("prefecture", "")),
-            city=str(data.get("city", "")),
-            address_line1=str(data.get("address_line1", "")),
-            address_line2=str(data.get("address_line2", "")),
-            preferred_date=str(data.get("preferred_date", "auto")),
-            preferred_time_window=str(data.get("preferred_time_window", "afternoon")),
-            preferred_model=str(data.get("preferred_model", "auto")),
+            family_name=require_non_empty(data["family_name"], "family_name"),
+            given_name=require_non_empty(data["given_name"], "given_name"),
+            family_name_kana=require_non_empty(data["family_name_kana"], "family_name_kana"),
+            given_name_kana=require_non_empty(data["given_name_kana"], "given_name_kana"),
+            email=normalize_email(data["email"]),
+            phone=normalize_japanese_phone(data["phone"]),
+            birth_date=normalize_birth_date(data["birth_date"]),
+            postal_code=str(data.get("postal_code", "")).strip(),
+            prefecture=str(data.get("prefecture", "")).strip(),
+            city=str(data.get("city", "")).strip(),
+            address_line1=str(data.get("address_line1", "")).strip(),
+            address_line2=str(data.get("address_line2", "")).strip(),
+            preferred_date=str(data.get("preferred_date", "auto")).strip(),
+            preferred_time_window=str(data.get("preferred_time_window", "afternoon")).strip(),
+            preferred_model=str(data.get("preferred_model", "auto")).strip(),
             preferred_models=preferred_models,
-            visit_purpose=str(data.get("visit_purpose", "購入相談")),
-            notes=str(data.get("notes", "")),
+            visit_purpose=str(data.get("visit_purpose", "購入相談")).strip(),
+            notes=str(data.get("notes", "")).strip(),
             date_window_days=date_window_days,
         )
 
