@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+outputs/
+secrets/
+config/applicant.local.json
+.env
+.DS_Store
