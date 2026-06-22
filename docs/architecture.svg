@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="920" viewBox="0 0 1280 920" role="img" aria-labelledby="title desc">
+  <title id="title">Rolex Reservation Assistant Architecture</title>
+  <desc id="desc">安全第一の予約応募支援CLIの全体アーキテクチャ図。個人情報暗号化、入力計画、実サイト手動確認、ローカルE2E、CIの流れを示す。</desc>
+  <defs>
+    <style>
+      .bg { fill:#f7faf9; }
+      .panel { fill:#ffffff; stroke:#d8e4df; stroke-width:2; rx:18; }
+      .box { fill:#ffffff; stroke:#1f7a5c; stroke-width:2; rx:14; }
+      .safe { fill:#e7f7ef; stroke:#1f7a5c; stroke-width:2; rx:14; }
+      .warn { fill:#fff6df; stroke:#c47a00; stroke-width:2; rx:14; }
+      .ci { fill:#eef3ff; stroke:#4267b2; stroke-width:2; rx:14; }
+      .mock { fill:#f1efff; stroke:#6a56c9; stroke-width:2; rx:14; }
+      .text { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; fill:#14231d; font-size:21px; font-weight:700; }
+      .small { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; fill:#30443b; font-size:15px; font-weight:500; }
+      .tiny { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; fill:#42554d; font-size:13px; font-weight:500; }
+      .title { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; fill:#0f2d23; font-size:34px; font-weight:800; }
+      .subtitle { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; fill:#426055; font-size:17px; font-weight:600; }
+      .arrow { stroke:#4d6a60; stroke-width:3; fill:none; marker-end:url(#arrowhead); }
+      .arrow2 { stroke:#6a56c9; stroke-width:3; fill:none; marker-end:url(#arrowhead2); }
+      .arrow3 { stroke:#4267b2; stroke-width:3; fill:none; marker-end:url(#arrowhead3); }
+      .badge { fill:#1f7a5c; rx:11; }
+      .badgeText { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; fill:#fff; font-size:13px; font-weight:800; }
+    </style>
+    <marker id="arrowhead" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <path d="M0,0 L12,4.5 L0,9 Z" fill="#4d6a60"/>
+    </marker>
+    <marker id="arrowhead2" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <path d="M0,0 L12,4.5 L0,9 Z" fill="#6a56c9"/>
+    </marker>
+    <marker id="arrowhead3" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <path d="M0,0 L12,4.5 L0,9 Z" fill="#4267b2"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1280" height="920"/>
+  <text x="50" y="62" class="title">Rolex Reservation Assistant — Architecture</text>
+  <text x="50" y="92" class="subtitle">個人情報は暗号化。実サイトは手動確認。ローカルE2Eでは入力・送信まで安全に検証。</text>
+
+  <rect x="38" y="125" width="1204" height="745" class="panel"/>
+
+  <rect x="75" y="165" width="245" height="95" class="safe"/>
+  <text x="95" y="198" class="text">応募者プロフィール</text>
+  <text x="95" y="224" class="small">applicant.local.json</text>
+  <text x="95" y="246" class="tiny">GitHubにコミットしない</text>
+
+  <rect x="382" y="165" width="245" height="95" class="safe"/>
+  <text x="402" y="198" class="text">暗号化</text>
+  <text x="402" y="224" class="small">encrypt-profile</text>
+  <text x="402" y="246" class="tiny">PBKDF2 + Fernet</text>
+
+  <rect x="690" y="165" width="245" height="95" class="safe"/>
+  <text x="710" y="198" class="text">暗号化ファイル</text>
+  <text x="710" y="224" class="small">secrets/applicant.enc</text>
+  <text x="710" y="246" class="tiny">パスフレーズSecretで復号</text>
+
+  <rect x="995" y="165" width="190" height="95" class="box"/>
+  <text x="1015" y="198" class="text">CLI</text>
+  <text x="1015" y="224" class="small">plan / open</text>
+  <text x="1015" y="246" class="tiny">入力計画を生成</text>
+
+  <path d="M320 213 H382" class="arrow"/>
+  <path d="M627 213 H690" class="arrow"/>
+  <path d="M935 213 H995" class="arrow"/>
+
+  <rect x="75" y="330" width="245" height="112" class="box"/>
+  <text x="95" y="362" class="text">予約先レジストリ</text>
+  <text x="95" y="389" class="small">大阪 / 銀座 / 表参道</text>
+  <text x="95" y="412" class="small">新宿 / 名古屋栄</text>
+
+  <rect x="382" y="330" width="245" height="112" class="box"/>
+  <text x="402" y="362" class="text">希望条件解決</text>
+  <text x="402" y="389" class="small">直近日付をランダム選択</text>
+  <text x="402" y="412" class="small">午後枠・モデル候補</text>
+
+  <rect x="690" y="330" width="245" height="112" class="box"/>
+  <text x="710" y="362" class="text">応募文生成</text>
+  <text x="710" y="389" class="small">店舗・希望日・時間</text>
+  <text x="710" y="412" class="small">希望モデル・来店目的</text>
+
+  <rect x="995" y="330" width="190" height="112" class="box"/>
+  <text x="1015" y="362" class="text">入力計画</text>
+  <text x="1015" y="389" class="small">必須項目チェック</text>
+  <text x="1015" y="412" class="small">監査ログ出力</text>
+
+  <path d="M1090 260 V298 H197 V330" class="arrow"/>
+  <path d="M320 386 H382" class="arrow"/>
+  <path d="M627 386 H690" class="arrow"/>
+  <path d="M935 386 H995" class="arrow"/>
+
+  <rect x="75" y="525" width="335" height="125" class="warn"/>
+  <text x="98" y="558" class="text">実予約サイト</text>
+  <text x="98" y="585" class="small">ブラウザを開く + 入力計画表示</text>
+  <text x="98" y="609" class="small">CAPTCHAと最終送信は人間が確認</text>
+  <text x="98" y="633" class="tiny">無人送信・CAPTCHA突破APIは実装しない</text>
+
+  <rect x="475" y="525" width="335" height="125" class="mock"/>
+  <text x="498" y="558" class="text">ローカルE2E</text>
+  <text x="498" y="585" class="small">Playwrightスクリプト生成</text>
+  <text x="498" y="609" class="small">入力 → フォールバック → 送信</text>
+  <text x="498" y="633" class="tiny">対象は localhost / .test のみ</text>
+
+  <rect x="875" y="525" width="270" height="125" class="ci"/>
+  <text x="898" y="558" class="text">検証・CI</text>
+  <text x="898" y="585" class="small">ruff + pytest</text>
+  <text x="898" y="609" class="small">100回リハーサル</text>
+  <text x="898" y="633" class="tiny">workflowテンプレート同梱</text>
+
+  <path d="M1090 442 V485 H242 V525" class="arrow"/>
+  <path d="M1090 442 V485 H642 V525" class="arrow2"/>
+  <path d="M1090 442 V485 H1010 V525" class="arrow3"/>
+
+  <rect x="75" y="720" width="1070" height="95" class="panel"/>
+  <rect x="100" y="746" width="96" height="30" class="badge"/>
+  <text x="118" y="767" class="badgeText">Safety</text>
+  <text x="220" y="768" class="small">実サイトでは、人間が画面を見てCAPTCHAと最終送信を確認します。</text>
+  <text x="220" y="795" class="small">GitHubには個人情報を保存せず、暗号化ファイルとSecret名だけを扱います。</text>
+</svg>
