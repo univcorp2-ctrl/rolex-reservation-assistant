@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "family_name": ["#family_name", "input[name='family_name']"],
+    "given_name": ["#given_name", "input[name='given_name']"],
+    "family_name_kana": ["#family_name_kana", "input[name='family_name_kana']"],
+    "given_name_kana": ["#given_name_kana", "input[name='given_name_kana']"],
+    "email": ["#email", "input[type='email']"],
+    "phone": ["#phone", "input[name='phone']"],
+    "birth_date": ["#birth_date", "input[name='birth_date']"],
+    "preferred_date": ["#preferred_date", "input[name='preferred_date']"],
+    "preferred_time_window": ["#preferred_time_window", "input[name='preferred_time_window']"],
+    "preferred_model": ["#preferred_model", "input[name='preferred_model']"],
+    "application_text": ["#application_text", "textarea[name='application_text']"]
+  },
+  "submit_selectors": ["#submit", "button[type='submit']"],
+  "success_selectors": ["#success", "text=送信を受け付けました"]
+}
