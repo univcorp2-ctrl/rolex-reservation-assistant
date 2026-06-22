@@ -1,5 +1,7 @@
 # Architecture
 
+![Rolex Reservation Assistant Architecture](architecture.svg)
+
 ## 全体像
 
 このツールは、予約応募の準備作業をCLIで整理し、実サイトでは人間の確認を必ず残す構成です。個人情報はGitHubに置かず、ローカルで暗号化したプロフィールまたはSecretsから読み込みます。
@@ -49,7 +51,7 @@ flowchart TD
 
 ## CI/CD
 
-GitHub Actionsは以下を実行します。
+GitHub Actionsは以下を実行する設計です。workflow作成権限がある環境では `.github/workflows/ci.yml` に配置します。現在の代替テンプレートは `docs/ci/python-ci.yml` です。
 
 - checkout
 - Python 3.11 / 3.12 setup
@@ -60,4 +62,4 @@ GitHub Actionsは以下を実行します。
 
 ## GPT image 最新モデル用の図解方針
 
-`docs/gpt-image-architecture-prompt.md` のプロンプトをGPT imageの最新モデルに入力すると、初心者向けのアーキテクチャ図を生成できます。画像はリポジトリに固定せず、最新モデルで再生成可能な資料として管理します。
+このドキュメントにはSVG画像版のアーキテクチャ図を含めています。追加でGPT imageの最新モデルに渡す再生成用プロンプトは `docs/gpt-image-architecture-prompt.md` に保存しています。
